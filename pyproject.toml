@@ -1,0 +1,17 @@
+[project]
+name = "intern-tracker"
+version = "0.1.0"
+description = "CLI tool for managing internship projects and tasks"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "click>=8.1",
+    "rich>=13.0",
+]
+
+[project.scripts]
+intern-tracker = "intern_tracker.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
