@@ -48,6 +48,7 @@ def print_standup() -> None:
         t = Text()
         t.append("  • ", style="dim")
         t.append(text, style=style)
+        t.append("\n")
         lines.append(t)
 
     def _project_name(task: dict) -> str:
