@@ -60,3 +60,28 @@ intern-tracker standup
 ## Task statuses
 
 `todo` · `in-progress` · `done`
+
+### Focus Sessions
+
+```bash
+# Start a focus session (will prompt for what you're working on)
+intern-tracker session start
+
+# Check current session status + elapsed time
+intern-tracker session status
+
+# End focus session and start a break (recommends break length)
+intern-tracker session break
+
+# End your break, ready for next session
+intern-tracker session end
+```
+
+### Energy Tracking
+
+```bash
+# Log your current energy level (1=very low, 5=great)
+intern-tracker energy log 4
+```
+
+The dashboard includes a **Today's Rhythm** panel showing total focus time, number of sessions, and work/break ratio. It turns red and warns you if you've been in a focus session for 90+ minutes without a break.
