@@ -43,6 +43,9 @@ def show_dashboard() -> None:
     data = store.load()
     today = date.today()
 
+    _rhythm_panel(data)
+    console.print()
+
     if not data["projects"]:
         console.print(Panel("[dim]No projects yet. Run 'intern-tracker add-project' to start.[/dim]", title="Dashboard"))
         return
@@ -115,3 +118,48 @@ def _make_progress(done: int, total: int) -> str:
     filled = round(done / total * 10)
     bar = "█" * filled + "░" * (10 - filled)
     return f"[{bar}]"
+
+
+def _duration_minutes(start_iso: str, end_iso: str | None = None) -> float:
+    start = datetime.fromisoformat(start_iso)
+    end = datetime.fromisoformat(end_iso) if end_iso else datetime.now()
+    return (end - start).total_seconds() / 60
+
+
+def _rhythm_panel(data: dict) -> None:
+    today_str = date.today().isoformat()
+    sessions = data.get("sessions", [])
+    today = [s for s in sessions if s["start"].startswith(today_str)]
+
+    focus = [s for s in today if s["type"] == "focus"]
+    breaks = [s for s in today if s["type"] == "break"]
+
+    total_focus = sum(_duration_minutes(s["start"], s["end"]) for s in focus)
+    total_break = sum(_duration_minutes(s["start"], s["end"]) for s in breaks)
+    session_count = len(focus)
+
+    ratio_str = "—"
+    if total_break > 0:
+        ratio_str = f"{total_focus / total_break:.1f}:1"
+
+    # Warn if there's an ongoing focus session ≥ 90 min
+    active_focus = next((s for s in reversed(sessions) if s["type"] == "focus" and s["end"] is None), None)
+    over_90 = active_focus is not None and _duration_minutes(active_focus["start"]) >= 90
+
+    text = Text()
+    text.append(f"  Focus time today: {int(total_focus)}m", style="green")
+    text.append("   ·   ", style="dim")
+    text.append(f"Sessions: {session_count}", style="cyan")
+    text.append("   ·   ", style="dim")
+    text.append(f"Work:break = {ratio_str}", style="blue")
+
+    border = "red" if over_90 else "green"
+    console.print(Panel(text, title="Today's Rhythm", border_style=border))
+
+    if over_90:
+        console.print(
+            Panel(
+                "[bold red]You've had 90+ minutes of focus without a break — step away![/bold red]",
+                border_style="red",
+            )
+        )
