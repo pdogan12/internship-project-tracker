@@ -14,7 +14,7 @@ Or run without installing:
 uv run intern-tracker <command>
 ```
 
-## Commands
+## Usage
 
 ### Projects
 

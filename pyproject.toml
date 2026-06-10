@@ -3,7 +3,7 @@ name = "intern-tracker"
 version = "0.1.0"
 description = "CLI tool for managing internship projects and tasks"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.8"
 dependencies = [
     "click>=8.1",
     "rich>=13.0",
