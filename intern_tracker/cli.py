@@ -1,5 +1,5 @@
 import click
-from . import projects, tasks, logs, dashboard, standup
+from . import projects, tasks, logs, dashboard, standup, session as sess, energy
 
 
 @click.group()
@@ -89,3 +89,51 @@ def show_dashboard() -> None:
 def show_standup() -> None:
     """Print a weekly standup summary (done, in-progress, up next)."""
     standup.print_standup()
+
+
+# ── Session ──────────────────────────────────────────────────────────────────
+
+
+@main.group("session")
+def session_group() -> None:
+    """Manage focus sessions and breaks."""
+
+
+@session_group.command("start")
+def session_start() -> None:
+    """Start a focus session."""
+    goal = click.prompt("What are you working on?", default="", show_default=False)
+    sess.session_start(goal.strip() or None)
+
+
+@session_group.command("break")
+def session_break() -> None:
+    """End focus session and start a break."""
+    sess.session_break()
+
+
+@session_group.command("end")
+def session_end() -> None:
+    """End the current break."""
+    sess.session_end()
+
+
+@session_group.command("status")
+def session_status() -> None:
+    """Show current session or break status."""
+    sess.session_status()
+
+
+# ── Energy ────────────────────────────────────────────────────────────────────
+
+
+@main.group("energy")
+def energy_group() -> None:
+    """Log energy levels."""
+
+
+@energy_group.command("log")
+@click.argument("level", type=int)
+def energy_log(level: int) -> None:
+    """Log your current energy level (1–5)."""
+    energy.log_energy(level)
