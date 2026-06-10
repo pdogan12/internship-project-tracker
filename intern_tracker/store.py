@@ -15,9 +15,11 @@ def _default(obj: Any) -> str:
 
 def load() -> dict:
     if not DATA_FILE.exists():
-        return {"projects": {}, "tasks": {}, "logs": []}
-    with DATA_FILE.open() as f:
-        return json.load(f)
+        return {"projects": {}, "tasks": {}, "logs": [], "sessions": [], "energy_logs": []}
+    data = json.load(DATA_FILE.open())
+    data.setdefault("sessions", [])
+    data.setdefault("energy_logs", [])
+    return data
 
 
 def save(data: dict) -> None:
